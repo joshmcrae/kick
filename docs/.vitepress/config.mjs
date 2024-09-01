@@ -14,7 +14,7 @@ export default defineConfig({
             {
                 text: 'Introduction',
                 items: [
-                    { text: 'Why Kick?', link: '/introduction' },
+                    { text: 'What is Kick?', link: '/introduction' },
                     { text: 'Getting Started', link: '/getting-started' }
                 ]
             }
