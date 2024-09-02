@@ -17,6 +17,12 @@ export default defineConfig({
                     { text: 'What is Kick?', link: '/introduction' },
                     { text: 'Getting Started', link: '/getting-started' }
                 ]
+            },
+            {
+                text: 'Concerns',
+                items: [
+                    { text: 'Dependency Injection', link: 'dependency-injection' }
+                ]
             }
         ],
         socialLinks: [
