@@ -6,6 +6,7 @@ export default defineConfig({
     base: '/kick',
     themeConfig: {
         logo: 'logo.png',
+        search: { provider: 'local' },
         nav: [
             { text: 'Home', link: '/' },
             { text: 'Guide', link: '/introduction' }
@@ -22,7 +23,8 @@ export default defineConfig({
                 text: 'Concerns',
                 items: [
                     { text: 'Routing', link: '/routing' },
-                    { text: 'Dependency Injection', link: '/dependency-injection' }
+                    { text: 'Dependency Injection', link: '/dependency-injection' },
+                    { text: 'Views', link: '/views' }
                 ]
             }
         ],
