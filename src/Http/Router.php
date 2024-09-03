@@ -2,6 +2,8 @@
 
 namespace Kick\Http;
 
+use SplFileInfo;
+
 class Router
 {
     /**
@@ -71,29 +73,44 @@ class Router
      * @param string $path
      * @param string[] $middleware
      * @param string $prefix
-     * @return array{string,string[]}
+     * @return array{string,string[]}[]
      */
     private function findRouteFiles(
         string $path, 
         array $middleware = [], 
         string $prefix = ''
     ): array {
+        $realpath = realpath($path);
         $iter = new \FilesystemIterator($path, \FilesystemIterator::SKIP_DOTS);
         $dirs = [];
         $files = [];
 
+
         // Collect middleware files
         foreach ($iter as $entry) {
+            $entrypath = realpath((string) $entry);
+
+            assert($entry instanceof SplFileInfo);
+            assert(is_string($realpath));
+            assert(is_string($entrypath));
+
             if ($entry->getFilename() === '__middleware.php') {
                 $middleware[] = $prefix . str_replace(
-                    realpath($path), '', 
-                    realpath($entry)
+                    $realpath,
+                    '', 
+                    $entrypath
                 );
             }
         }
 
         // Collect route files and directories
         foreach ($iter as $entry) {
+            $entrypath = realpath((string) $entry);
+
+            assert($entry instanceof SplFileInfo);
+            assert(is_string($realpath));
+            assert(is_string($entrypath));
+
             if ($entry->isDir()) {
                 $dirs[] = (string) $entry;
 
@@ -106,7 +123,7 @@ class Router
             }
 
             $files[] = [
-                $prefix . str_replace(realpath($path), '', realpath($entry)), 
+                $prefix . str_replace($realpath, '', $entrypath), 
                 $middleware
             ];
         }
@@ -148,7 +165,7 @@ class Router
 
         $uri = preg_replace('/_(\w+)/', ':$1', implode('/', $path));
 
-        if (empty($uri)) {
+        if (is_null($uri) || $uri === '') {
             $uri = '/';
         }
 

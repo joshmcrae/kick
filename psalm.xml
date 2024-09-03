@@ -15,4 +15,8 @@
         <directory name="vendor" />
     </ignoreFiles>
 </projectFiles>
+
+<issueHandlers>
+    <UnresolvableInclude errorLevel="suppress"/>
+</issueHandlers>
 </psalm>

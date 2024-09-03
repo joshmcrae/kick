@@ -28,6 +28,7 @@ readonly class Route
     ) {
         $pattern = str_replace('/', '\/', $uri);
         $pattern = preg_replace('/\:(\w*)/', '(?<$1>\w*)', $pattern);
+        assert(is_string($pattern));
 
         $this->pattern = '/^' . $pattern . '$/';
     }
@@ -47,6 +48,8 @@ readonly class Route
         }
 
         $match = [];
+
+        assert(!empty($this->pattern));
 
         if (preg_match($this->pattern, $request->path, $match)) {
             $segments = array_filter($match, 'is_string', ARRAY_FILTER_USE_KEY);

@@ -41,7 +41,7 @@ class Application
     {
         $this->container = new Container;
         $this->router = new Router('');
-        $this->exceptionHandler = fn ($e, $r) => $this->handleError($e, $r);
+        $this->exceptionHandler = fn (\Throwable $e, Request $r): Response => $this->handleError($e, $r);
     }
 
     /**
@@ -93,7 +93,7 @@ class Application
     {
         $route = null;
 
-        if ($this->router) {
+        if ($this->router->path !== '') {
             $route = $this->router->match($request, $request->segments);
         }
 
@@ -123,7 +123,7 @@ class Application
     {
         // Call the handler as the final step
         $handler = require($this->router->path . $route->filename);
-        $fn = fn (Request $request) => $this->toResponse(
+        $fn = fn (Request $request): Response => $this->toResponse(
             $this
                 ->container
                 ->invokeWithResolvedArgs($handler, [$request])
@@ -136,7 +136,7 @@ class Application
 
             // Cloures can be invoked directly
             if (is_callable($definition)) {
-                $fn = fn (Request $request) => $this
+                $fn = fn (Request $request): mixed => $this
                     ->container
                     ->invokeWithResolvedArgs($definition, [$request, $fn]);
 
@@ -155,7 +155,7 @@ class Application
                     ->container
                     ->resolve($name);
 
-                $fn = fn (Request $request) => $this
+                $fn = fn (Request $request): mixed => $this
                     ->container
                     ->invokeWithResolvedArgs($service, [$request, $fn]);
             }
@@ -184,11 +184,11 @@ class Application
      * Handles an exception caught by the application in accordance
      * with the request's content type.
      *
-     * @param Throwable $exception
+     * @param \Throwable $exception
      * @param Request $request
      * @return Response
      */
-    private function handleError(\Throwable $exception, Request $request)
+    private function handleError(\Throwable $exception, Request $request): Response
     {
         $statusCode = 500;
         $message = 'An unexpected error occurred.';
@@ -213,7 +213,7 @@ class Application
             default => new Response(
                 $statusCode, 
                 ['content-type' => 'text/html'],
-                e::html(e::body(e::h1('Error'), e::p($message))
+                (string) e::html(e::body(e::h1('Error'), e::p($message))
                 )
             )
         };

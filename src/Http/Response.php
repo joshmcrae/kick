@@ -13,10 +13,16 @@ class Response
      */
     public static function json(mixed $value, int $statusCode = 200): Response
     {
+        $body = json_encode($value);
+
+        if ($body === false) {
+            $body = '';
+        }
+
         return new Response(
             statusCode: $statusCode,
             headers: ['content-type' => 'application/json'],
-            body: json_encode($value)
+            body: $body
         );
     }
 

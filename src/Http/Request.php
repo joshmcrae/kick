@@ -8,9 +8,9 @@ class Request
      * Creates a request from PHP's $_SERVER superglobal and input stream.
      *
      * @param array $values
-     * @return static
+     * @return self
      */
-    public static function fromGlobals(array $values = []): static
+    public static function fromGlobals(array $values = []): self
     {
         if (empty($values)) {
             $values = $_SERVER;
@@ -18,7 +18,9 @@ class Request
 
         // Parse path and query string parameters
         $uri = parse_url($values['REQUEST_URI']);
-        $path = $uri['path'];
+        assert(is_array($uri));
+
+        $path = $uri['path'] ?? '/';
         $query = [];
         parse_str($uri['query'] ?? '', $query);
 
@@ -38,19 +40,23 @@ class Request
 
         switch ($headers['content-type'] ?? null) {
             case 'application/json':
-                $data = json_decode($body, true);
+                if (is_string($body)) {
+                    $data = json_decode($body ?: '', true);
+                }
                 break;
             default:
-                parse_str($body, $data);
+                if (is_string($body)) {
+                    parse_str($body, $data);
+                }
                 break;
         }
 
-        return new static(
+        return new self(
             method: $values['REQUEST_METHOD'],
             path: $path,
             query: $query,
             headers: $headers,
-            body: $body,
+            body: is_string($body) ? $body : '',
             data: $data
         );
     }

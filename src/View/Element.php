@@ -150,7 +150,7 @@ class Element
      */
     private array $children = [];
 
-    public static function attr(string $name, string $value)
+    public static function attr(string $name, string $value): Attribute
     {
         return new Attribute($name, $value);
     }
@@ -158,11 +158,13 @@ class Element
     /**
      * Dynamically creates an element by name.
      *
-     * @return static
+     * @param string $name
+     * @param array<string,mixed> $args
+     * @return self
      */
-    public static function __callStatic($name, $args): static
+    public static function __callStatic(string $name, array $args): self
     {
-        return new static($name, in_array($name, self::VOID_TAG_NAMES), ...$args);
+        return new self($name, in_array($name, self::VOID_TAG_NAMES), ...$args);
     }
 
     /**

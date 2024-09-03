@@ -102,5 +102,5 @@ In cases where you wish to progressively enhance the user experience, or need
 features that can only be offered through the browser via JavaScript, one of
 the following libraries may be useful:
 
-- [HTMX](htmx.org)
-- [AlpineJS](alpinejs.dev)
+- [HTMX](https://htmx.org)
+- [AlpineJS](https://alpinejs.dev)
