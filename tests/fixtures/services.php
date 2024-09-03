@@ -2,6 +2,8 @@
 
 namespace Kick\Test;
 
+use Kick\Http\Request;
+
 class ServiceA {}
 
 class ServiceB
@@ -18,4 +20,15 @@ class ServiceC
 class ServiceD
 {
     public function __construct(public ServiceC $serviceC) {}
+}
+
+class AddHeaderMiddleware
+{
+    public function __invoke(Request $request, callable $next)
+    {
+        $response = $next($request);
+        $response->headers['x-test-value'] = 'baz';
+
+        return $response;
+    }
 }

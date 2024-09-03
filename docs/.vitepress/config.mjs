@@ -21,7 +21,8 @@ export default defineConfig({
             {
                 text: 'Concerns',
                 items: [
-                    { text: 'Dependency Injection', link: 'dependency-injection' }
+                    { text: 'Routing', link: '/routing' },
+                    { text: 'Dependency Injection', link: '/dependency-injection' }
                 ]
             }
         ],
