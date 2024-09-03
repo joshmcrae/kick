@@ -2,4 +2,4 @@
 
 A fresh framework with the essentials.
 
-[Read the docs.](https://joshmcrae.github.com/kick)
+[Read the docs.](https://joshmcrae.github.io/kick)

@@ -5,7 +5,7 @@ export default defineConfig({
     description: "A fresh framework with the essentials",
     base: '/kick',
     themeConfig: {
-        logo: 'logo.png',
+        logo: './logo.png',
         search: { provider: 'local' },
         nav: [
             { text: 'Home', link: '/' },

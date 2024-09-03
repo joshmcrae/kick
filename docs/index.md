@@ -5,7 +5,7 @@ hero:
   name: "Kick PHP"
   text: "A fresh framework with the essentials"
   tagline: "Just enough to get you up and running"
-  image: logo.png
+  image: ./logo.png
   actions:
     - theme: brand
       text: What is Kick?
