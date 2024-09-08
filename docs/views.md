@@ -33,6 +33,16 @@ e::form(
 );
 ```
 
+In some situations it may be convenient to conditionally concatenate a list of
+strings to form an attribute value, e.g. on the `class` attribute. For this
+reason, attributes with array values are interpretted in a special way. Array
+elements with a numeric index are concatenated unconditionally, whereas string
+indices are concatenated if their associated value is truthy.
+
+```php
+e::input(type: 'text', class: ['p-4 rounded-lg border-1', 'border-slate-300' => !$error, 'border-slate-500' => $error]);
+```
+
 Underscores in attribute names are automatically converted to hyphens. In some
 cases, more complex attribute names are needed. For example, you may be using
 a front end library that understands attributes in the form of `:bind` and `@click`.

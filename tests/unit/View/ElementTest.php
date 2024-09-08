@@ -36,6 +36,20 @@ class ElementTest extends TestCase
         $this->assertEquals('<div x-show="open"></div>', (string) $el);
     }
 
+    public function testAttributeBoolean()
+    {
+        $el = new Element('button', false, disabled: true);
+
+        $this->assertEquals('<button disabled></button>', (string) $el);
+    }
+
+    public function testAttributeArray()
+    {
+        $el = new Element('div', false, class: ['p-4 border-1', 'border-slate-300' => false, 'border-red-500' => true]);
+
+        $this->assertEquals('<div class="p-4 border-1 border-red-500"></div>', (string) $el);
+    }
+
     public function testInnerText()
     {
         $el = new Element('p', false, 'Hello, world!<br/>');

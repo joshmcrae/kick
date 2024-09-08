@@ -215,7 +215,28 @@ class Element
         // Render attributes
         foreach ($this->attributes as $name => $value) {
             $name = strtolower(str_replace('_', '-', $name));
-            $str .= sprintf(' %s="%s"', $name, htmlspecialchars($value));
+
+            if (is_array($value)) {
+                $values = [];
+
+                foreach ($value as $k => $v) {
+                    if (is_string($k)) {
+                        if (boolval($v)) {
+                            $values[] = $k;
+                        }
+                    } else {
+                        $values[] = $v;
+                    }
+                }
+
+                $value = implode(' ', $values);
+            }
+
+            if (is_bool($value)) {
+                $str .= ' ' . $name;
+            } else {
+                $str .= sprintf(' %s="%s"', $name, htmlspecialchars($value));
+            }
         }
 
         if ($this->isVoid) {
