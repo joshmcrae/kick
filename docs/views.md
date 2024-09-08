@@ -1,8 +1,8 @@
 # Views
 
 The `Kick\View\Element` class is responsible for generating HTML directly from
-PHP code. Instead of calling out to a separate templating language, views can
-be composed through the use of PHP functions, classes, loops and conditionals.
+PHP code. Instead of calling out to a separate templating language, views are
+composed through the use of PHP functions, classes, loops and conditionals.
 
 ```php
 <?php
@@ -60,10 +60,15 @@ class Layout
                 e::script(src: 'https://cdn.com/library.js'),
                 e::title($title . ' - Acme Dashboard')
             ),
-            e::body(...$args)
+            e::body(
+                e::h1($title),
+                ...$args
+            )
         );
     }
 }
+
+Layout::dashboard('User Profile', e::form(...));
 ```
 
 ```php
@@ -79,6 +84,8 @@ class Form
         );
     }
 }
+
+Form::input('email', 'Your email address...');
 ```
 
 Functional programming can also help to compose views in an expressive way.
@@ -89,6 +96,8 @@ use Kick\Element\View as e;
 $list = fn ($items) => e::ul(
     array_map(($i) => e::li($i), $items)
 );
+
+$list(['apple', 'bannana', 'carrot']);
 ```
 
 ## Adding client-side functionality

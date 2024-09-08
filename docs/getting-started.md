@@ -38,8 +38,8 @@ use Kick\Http\Request;
 ## Defining a route
 
 In our example configuration, files found under the `pages/` directory will map
-to URIs that are understood by the application. A route file must return a `callable`
-which accepts the incoming request as an argument and returns a response.
+to URIs that are available in the application. A route file must return a closure
+that accepts the incoming request as an argument and returns a response.
 
 Let's create a file named `pages/greeting/_name.get.php`:
 
@@ -52,7 +52,7 @@ use Kick\View\Element as e;
 
 return fn (Request $request) => e::html(
     e::body(
-        e::h1('Hello, ', $request->get('name'), '!'),
+        e::h1('Hello, ', ucfirst($request->get('name')), '!'),
         e::p('Welcome to Kick.')
     )
 );
@@ -71,5 +71,5 @@ command:
 php -S 0.0.0.0:3000 -t public/
 ```
 
-Navigate to `http://0.0.0.0:3000/greet/name` in the browser and replace `name`
+Navigate to `http://0.0.0.0:3000/greeting/kick` in the browser and replace `kick`
 with different values to get different greetings.

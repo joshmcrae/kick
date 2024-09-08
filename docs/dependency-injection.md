@@ -5,8 +5,8 @@ codebases. Instead of leaving it up to each class to create and configure its
 dependencies, a service container _injects_ those dependencies into classes as
 they are being instantiated.
 
-To demonstrate what we're talking about, consider a class that needs a database
-connection to do something useful.
+To demonstrate this concept, consider a class that needs a database connection to
+do something useful.
 
 ```php
 <?php
@@ -19,7 +19,10 @@ class RegisterUser
     {
         $this
             ->db
-            ->insert('users', func_get_args());
+            ->insert('users', [
+                'username' => $username,
+                'pw_hash' => password_hash($password, PASSWORD_DEFAULT)
+            ]);
     }
 }
 ```
@@ -32,8 +35,9 @@ throughout the application, and allows different configurations of the class
 ## Literals and Factories
 
 In cases where Kick knows how to create all dependencies of a class, it will
-automatically construct the class when requested. This is called auto-wiring,
-and it enables quicker development while cutting down on configuration.
+automatically construct the class when it needs to be resolved. This is called
+auto-wiring, and it enables quicker development while cutting down on manual
+configuration.
 
 In some cases however, Kick cannot determine all dependencies. Take the `Database`
 from the earlier example. We would typically require a host and some credentials
@@ -56,18 +60,20 @@ $container->literal('apiKey', getenv('API_KEY'));
 
 A factory service definition on the other hand binds a service name to a `callable`
 that is responsible for building the service on demand. This is useful in situations
-where the service isn't required on every request and you want it created on demand.
+where the service isn't required on every request and you want it constructed lazily.
 
 ```php
 $container->factory(Database::class, fn () => new Database($container->resolve('dsn')));
 ```
 
+Note that once resolved, an object created by a factory is cached and returned on
+subsequent requests for that service.
+
 ## Providers
 
-A Kick application can be passed a service provider, which is simply a `callable`
-that is passed the container as an argument. A service provider can be used to
-define services that cannot be automatically resolved and perform other initialization
-required at application boot.
+A Kick application can be configured with any number of service providers, tasked
+with defining base depenendencies and performing other initialization during boot.
+A service provider is simply a `callable` that receives an instance of `Kick\Service\Container`.
 
 ```php
 <?php
@@ -76,8 +82,9 @@ use Kick\Service\Container;
 use Kick\Application;
 
 $app = (new Application)
-    ->withProvider(fn (Container $c) => 
-        $c->literal(Database::class, new Database('sqlite::memory:'))
+    ->withProvider(fn (Container $c) => $c
+        ->literal('db_dsn', 'sqlite::memory:)
+        ->factory(Database::class, fn () => new Database($c->resolve('db_dsn')))
     );
 ```
 
@@ -87,14 +94,15 @@ To resolve a service, `Container::resolve()` can be called with the desired
 service name. This should only be necessary within a service provider, because
 Kick will automatically resolve dependencies when invoking route handlers and
 middleware. Any type-hinted parameter specified on a route handler or middleware
-`callable` will be auto-injected by the service container.
+closure will be auto-injected by the service container.
 
 ```php
-
 <?php
 
-return fn (Database $db) =>
+use Kick\Http\Request;
+
+return fn (Request $request, Database $db) =>
     $db
-        ->query('select * from posts')
+        ->query('select * from posts where uid = ?', $request->get('uid'))
         ->fetchAll();
 ```
