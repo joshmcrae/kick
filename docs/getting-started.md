@@ -24,7 +24,7 @@ For this example, we'll use `public/index.php`:
 ```php
 <?php
 
-require_once(__DIR__ . '/vendor/autoload.php');
+require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Kick\Application;
 use Kick\Http\Request;
