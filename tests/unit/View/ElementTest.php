@@ -89,4 +89,22 @@ class ElementTest extends TestCase
 
         $this->assertEquals('<button @click="show = true">Load more...</button>', (string) $button);
     }
+
+    public function testConditionalRender()
+    {
+        $link = Element::a(
+            'Click here.',
+            href: '/',
+            if: 1 === 1
+        );
+
+        $empty = Element::a(
+            'Click here.',
+            href: '/',
+            if: 1 === 2
+        );
+
+        $this->assertEquals('<a href="/">Click here.</a>', (string) $link);
+        $this->assertEquals('', (string) $empty);
+    }
 }

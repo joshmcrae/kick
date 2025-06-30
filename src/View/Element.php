@@ -216,6 +216,14 @@ class Element
         foreach ($this->attributes as $name => $value) {
             $name = strtolower(str_replace('_', '-', $name));
 
+            if ($name === 'if') {
+                if (!$value) {
+                    return '';
+                }
+
+                continue;
+            }
+
             if (is_array($value)) {
                 $values = [];
 
