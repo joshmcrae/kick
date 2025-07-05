@@ -128,6 +128,10 @@ class Router
             ];
         }
 
+        // Ensure literal paths are matched before segments
+        usort($files, fn ($a, $b) => $b[0] <=> $a[0]);
+        rsort($dirs);
+
         foreach ($dirs as $dir) {
             $files = array_merge(
                 $files,

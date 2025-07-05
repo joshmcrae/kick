@@ -19,7 +19,7 @@ class RouterTest extends TestCase
     {
         $routes = $this->router->getRoutes();
 
-        $this->assertCount(6, $routes);
+        $this->assertCount(7, $routes);
     }
 
     public function testMatchWithWrongMethod()
