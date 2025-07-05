@@ -38,9 +38,11 @@ class ElementTest extends TestCase
 
     public function testAttributeBoolean()
     {
-        $el = new Element('button', false, disabled: true);
+        $disabled = new Element('button', false, disabled: true);
+        $enabled = new Element('button', false, disabled: false);
 
-        $this->assertEquals('<button disabled></button>', (string) $el);
+        $this->assertEquals('<button disabled></button>', (string) $disabled);
+        $this->assertEquals('<button></button>', (string) $enabled);
     }
 
     public function testAttributeArray()

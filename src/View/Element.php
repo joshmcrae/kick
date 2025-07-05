@@ -241,7 +241,9 @@ class Element
             }
 
             if (is_bool($value)) {
-                $str .= ' ' . $name;
+                if ($value) {
+                    $str .= ' ' . $name;
+                }
             } else {
                 $str .= sprintf(' %s="%s"', $name, htmlspecialchars($value));
             }
